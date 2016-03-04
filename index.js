@@ -12,7 +12,13 @@ function Level(location) {
   if (!(this instanceof Level)) return new Level(location)
   if (!location) throw new Error("constructor requires at least a location argument")
   this.IDBOptions = {}
-  this.location = location
+  if(typeof location === 'object') {
+      console.log('Location: ' + JSON.stringify(location))
+      this.location = location.location
+      this.dbName = location.dbName
+  } else {
+      this.location = location
+  }
 }
 
 util.inherits(Level, AbstractLevelDOWN)
@@ -21,6 +27,7 @@ Level.prototype._open = function(options, callback) {
   var self = this
     
   var idbOpts = {
+    dbName: this.dbName,
     storeName: this.location,
     autoIncrement: false,
     keyPath: null,
